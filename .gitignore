@@ -1,0 +1,15 @@
+# Source photo library exported from Google Drive — 44 MB of originals that
+# the site does not need. Masters live in Drive and on Chris's machine.
+drive-download-*/
+
+node_modules/
+.netlify/
+.DS_Store
+Thumbs.db
+*.bak
+
+# Internal notes, working files and superseded concepts. This repository is
+# PUBLIC; these live in the private repo clevejonesfoundation/foundation-docs.
+docs/
+Updates/
+concepts/

@@ -1,0 +1,11 @@
+# Normalise line endings. The repo stores LF; edits made on Windows, on a Mac
+# and in Claude on the web all land the same way, so a one-line copy change
+# never shows up as "every line changed".
+* text=auto eol=lf
+
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.JPG  binary
+*.pdf  binary
+*.docx binary

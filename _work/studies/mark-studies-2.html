@@ -1,0 +1,544 @@
+<title>Mark Studies II</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Inter:wght@400;600;700&family=Newsreader:opsz,wght@6..72,300;6..72,400&display=swap">
+<style>
+/* Second pass. Every mark is shown in the full lockup, because that is the
+   only place a mark is ever actually seen. */
+:root{
+  --terracotta:#C2553A;
+  --sage:#6F8F78;
+  --blue:#2B3A73;
+  --navy:#1B2350;
+  --gold:#C9A227;
+
+  --paper:#FBF9F5;
+  --panel:#FFFFFF;
+  --ink:#1B2350;
+  --ink-soft:#5A6183;
+  --rule:#E4DED3;
+  --accent:var(--terracotta);
+
+  --display:"Bricolage Grotesque","Arial Black",system-ui,sans-serif;
+  --serif:"Newsreader",Georgia,"Times New Roman",serif;
+  --ui:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
+
+  /* the ground every mark sits on, switched by the strip at the top */
+  --ground:#F7F3EC;
+  --ground-rule:#E4DED3;
+  --mark-ink:#C2553A;
+  --lock-name:#1B2350;
+  --lock-tag:#7C7363;
+
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#15172B; --panel:#1D2039; --ink:#EDEAF5;
+    --ink-soft:#A3A7C4; --rule:#30344F; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#15172B; --panel:#1D2039; --ink:#EDEAF5;
+  --ink-soft:#A3A7C4; --rule:#30344F; color-scheme:dark;
+}
+
+*,*::before,*::after{ box-sizing:border-box; }
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:var(--serif); font-size:1.0625rem; line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{
+  max-width:1160px; margin-inline:auto;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+}
+h1,h2,h3{ font-family:var(--display); font-weight:800; line-height:1.08; text-wrap:balance; margin:0; }
+h1{ font-size:clamp(2.1rem,5vw,3.2rem); }
+h2{ font-size:clamp(1.5rem,3vw,2.05rem); }
+h3{ font-size:1.125rem; line-height:1.22; }
+p{ margin:0; }
+em{ font-style:italic; }
+
+.eyebrow{
+  display:flex; align-items:center; gap:.6em;
+  font-family:var(--ui); font-weight:700; font-size:.8333rem;
+  letter-spacing:.16em; text-transform:uppercase; color:var(--accent);
+}
+.eyebrow::before{ content:""; width:10px; height:10px; background:currentColor; flex:none; }
+
+/* ------------------------------------------------------------------ head */
+.masthead{ background:var(--navy); color:#F2EEE6; padding-block:clamp(38px,6vw,64px); }
+.masthead .eyebrow{ color:var(--gold); }
+.masthead h1{ color:#fff; margin:.55em 0 .5em; max-width:17ch; }
+.masthead .deck{ max-width:62ch; color:rgba(255,255,255,.87); }
+.masthead .deck + .deck{ margin-top:.85em; }
+
+/* --------------------------------------------------------------- control */
+body::before{
+  content:""; position:fixed; inset:0 0 auto; height:env(safe-area-inset-top,0px);
+  z-index:11; background:var(--paper);
+}
+.controls{
+  position:sticky; top:env(safe-area-inset-top,0px); z-index:10;
+  background:var(--paper); border-bottom:1px solid var(--rule);
+}
+.controls .wrap{ display:flex; flex-wrap:wrap; align-items:center; gap:10px 18px; padding-block:12px; }
+.controls .label{
+  font-family:var(--ui); font-weight:700; font-size:.8333rem;
+  letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft);
+}
+.swatches{ display:flex; gap:8px; flex-wrap:wrap; }
+.swatches button{
+  display:inline-flex; align-items:center; gap:.5em;
+  font-family:var(--ui); font-weight:600; font-size:.8333rem; color:var(--ink);
+  background:transparent; border:1px solid var(--rule); border-radius:2px;
+  padding:.42em .7em .42em .45em; cursor:pointer;
+}
+.swatches button:hover{ border-color:var(--ink-soft); }
+.swatches button[aria-pressed="true"]{ border-color:var(--accent); box-shadow:inset 0 0 0 1px var(--accent); }
+.swatches .chip{ width:18px; height:18px; flex:none; border:1px solid rgba(90,97,131,.35); }
+:focus-visible{ outline:3px solid var(--gold); outline-offset:2px; }
+
+/* -------------------------------------------------------------- sections */
+.set{ padding-block:clamp(40px,5vw,62px); border-bottom:1px solid var(--rule); }
+.set:last-of-type{ border-bottom:0; }
+.set-head{ max-width:68ch; display:grid; gap:.7em; margin-bottom:clamp(26px,3vw,36px); }
+.set-head p{ color:var(--ink-soft); }
+.set-head p + p{ margin-top:.2em; }
+
+.frames{ display:grid; gap:22px; }
+.frame{ background:var(--panel); border:1px solid var(--rule); display:grid; min-width:0; }
+@media (min-width:940px){
+  .frame{ grid-template-columns:minmax(0,1.5fr) minmax(0,1fr); }
+  .frame .caption{ border-left:1px solid var(--rule); }
+}
+.stage{
+  background:var(--ground); border-bottom:1px solid var(--ground-rule);
+  display:grid; place-items:center; padding:clamp(22px,3vw,36px);
+  min-height:200px; transition:background-color .25s ease; min-width:0;
+}
+@media (min-width:940px){ .stage{ border-bottom:0; } }
+.caption{ padding:20px 22px 24px; display:grid; gap:.4em; align-content:start; }
+.caption .no{
+  font-family:var(--ui); font-weight:700; font-size:.8333rem; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--accent);
+}
+.caption p{ font-size:.9375rem; color:var(--ink-soft); }
+.tag{
+  font-family:var(--ui); font-weight:600; font-size:.8333rem; color:var(--ink-soft);
+  display:inline-flex; align-items:center; gap:.6em; margin-top:.7em;
+}
+.tag .mini{
+  width:30px; height:30px; background:var(--ground); border:1px solid var(--ground-rule);
+  display:grid; place-items:center; flex:none; padding:2px;
+}
+.tag .mini svg{ width:100%; height:100%; color:var(--mark-ink); }
+
+/* --------------------------------------------------------------- lockups */
+.lockup{
+  display:flex; align-items:center; gap:clamp(11px,1.5vw,16px);
+  color:var(--ink); max-width:100%;
+}
+.lockup.col{ display:grid; justify-items:start; }
+.lockup>svg{ height:73px; flex:none; color:var(--mark-ink); }
+/* a mark drawn on the diagonal fills less of its square, so it is set taller
+   to carry the same weight beside the wordmark as a flat one */
+.lockup>svg.tall{ height:92px; }
+.lockup .text{ display:grid; gap:.3em; justify-items:stretch; min-width:0; }
+.lockup .name{
+  font-family:var(--serif); font-weight:400; line-height:1; font-size:2.116rem;
+  text-align:justify; text-align-last:justify; color:var(--lock-name);
+}
+.lockup .tagline{
+  font-family:var(--ui); font-weight:700; line-height:1; font-size:.8333rem;
+  letter-spacing:.17em; text-transform:uppercase; white-space:nowrap;
+  margin-inline-end:-.17em; color:var(--lock-tag);
+}
+
+/* a row of tiles justified to the wordmark: the first tile's left edge sits
+   under the C, the last tile's right edge under the final n */
+.tilerow{ display:flex; justify-content:space-between; align-items:flex-end; width:100%; margin-bottom:13px; }
+.tilerow .t{ flex:0 1 52px; aspect-ratio:1; border-radius:2.5px; }
+.tilerow .t svg{ width:100%; height:100%; display:block; }
+.rulerow{ display:flex; gap:7px; width:100%; margin-top:14px; }
+.rulerow span{ flex:1; height:8px; border-radius:1px; }
+
+@media (max-width:640px){
+  .lockup{ flex-direction:column; align-items:flex-start; }
+  .lockup .name{ font-size:1.5rem; text-align:left; text-align-last:left; }
+  .lockup .tagline{ white-space:normal; line-height:1.45; }
+  .lockup>svg{ height:54px; }
+  .lockup>svg.tall{ height:68px; }
+  .tilerow .t{ flex:0 1 40px; }
+}
+
+/* ------------------------------------------------------------- the fifth */
+.palette{ display:flex; gap:0; margin-top:.9em; border:1px solid var(--rule); }
+.palette span{ flex:1; height:26px; }
+.palette span.new{ flex:1.5; box-shadow:inset 0 0 0 2px var(--panel); }
+.hex{ font-family:var(--ui); font-weight:700; font-size:.8333rem; letter-spacing:.06em; color:var(--ink-soft); }
+
+/* ------------------------------------------------------------------ foot */
+.foot{
+  border-top:1px solid var(--rule); padding-block:26px 34px;
+  font-family:var(--ui); font-size:.8333rem; color:var(--ink-soft);
+}
+@media (prefers-reduced-motion:reduce){ *{ transition:none!important; } }
+</style>
+
+<header class="masthead">
+  <div class="wrap">
+    <p class="eyebrow">Cleve Jones Foundation</p>
+    <h1>The marks, in the lockup</h1>
+    <p class="deck">The mark you have is at the top, unchanged, so everything under it has something to be measured against. Sets&nbsp;2 and&nbsp;3 are gone. What is left is the three you kept, the rotated bullhorn you asked for, five directions we had not looked at yet, and four candidates for a fifth colour.</p>
+    <p class="deck">Every mark on this sheet is shown the way it will actually be seen &mdash; locked up with the wordmark and the tagline, at the size the site header uses. The small square in each caption is the version that has to work as a favicon, an app icon or a social avatar, and for the horizontal marks that is a different drawing, which is itself a finding.</p>
+  </div>
+</header>
+
+<div class="controls">
+  <div class="wrap">
+    <span class="label" id="ground-label">Show on</span>
+    <div class="swatches" role="group" aria-labelledby="ground-label" id="grounds"></div>
+  </div>
+</div>
+
+<main id="sheet"></main>
+
+<div class="foot">
+  <div class="wrap">Marks drawn from the Option&nbsp;5 artwork on page&nbsp;3 of the strategy deck. The wordmark is Newsreader and the tagline is Inter, as specified on page&nbsp;4. Nothing here is built into the site: the live site still uses the four-square mark.</div>
+</div>
+
+<svg aria-hidden="true" focusable="false" style="position:absolute;width:0;height:0;overflow:hidden">
+  <defs id="defs"></defs>
+</svg>
+
+<script>
+(function () {
+  'use strict';
+
+  var C = {
+    terracotta:'#C2553A', sage:'#6F8F78', blue:'#2B3A73',
+    navy:'#1B2350', gold:'#C9A227'
+  };
+  var FOUR = [C.terracotta, C.sage, C.gold, C.blue];
+  var NAMES = ['bullhorn', 'brush', 'people', 'quilt'];
+
+  /* ------------------------------------------------------------- artwork */
+  var D_HORN = 'M159.49 49.07L96.99 77.55L56.94 77.55L56.25 73.38L40.05 73.38L40.05 122.69L56.02 122.92L56.71 118.75L72.45 118.75L81.71 151.62L97.22 151.39L90.05 118.75L97.92 118.75L160.88 146.99L161.11 49.54Z';
+
+  var ICON = {
+    bullhorn: '<path fill="#fff" d="' + D_HORN + '"/>',
+    brush: '<path fill="#fff" opacity=".7" d="M90.05 93.75L81.71 102.31L79.4 107.18L92.59 117.82L96.06 115.28L103.47 105.09L101.16 101.85L96.53 100.46L93.98 96.06Z"/><path fill="#fff" d="M134.49 47.92L130.79 49.31L95.6 91.2L94.44 97.22L96.3 100L100.69 101.16L105.32 98.84L139.35 58.56L141.2 55.32L140.51 51.16L138.19 48.61ZM78.01 107.18L67.82 117.13L62.5 126.39L58.56 141.2L58.8 145.14L68.29 142.13L76.39 137.73L84.95 130.32L91.2 122.22L92.36 119.91L91.67 117.82ZM151.85 143.29L132.64 151.16L118.98 153.24L108.8 153.01L72.92 146.53L65.51 147.45L57.87 150.23L52.31 153.94L50.46 156.48L50.23 159.72L52.31 162.73L54.63 163.66L58.33 162.73L65.51 158.33L69.68 157.41L81.25 158.1L91.9 160.88L112.5 163.66L128.7 162.73L137.96 160.65L155.56 152.55L157.18 150.23L157.18 146.53L155.09 143.98Z"/>',
+    people: '<path fill="#fff" d="M73.38 40.97L65.28 42.59L57.64 48.15L53.7 54.17L52.08 63.19L53.7 71.06L59.26 78.7L65.51 82.41L75 84.03L84.26 81.25L89.81 76.62L93.29 71.3L95.14 61.81L93.52 54.4L87.73 46.3L81.71 42.59ZM136.11 78.7L129.17 81.02L124.31 85.88L121.99 92.13L122.22 98.61L124.31 103.24L129.17 108.33L134.72 110.42L141.2 110.42L146.99 108.1L151.62 103.24L153.7 98.61L153.7 90.74L151.39 85.65L147.69 81.71L143.98 79.63ZM72.69 98.15L65.28 99.07L57.64 102.08L50 108.56L46.53 113.66L43.06 121.06L39.81 132.41L37.96 158.33L109.03 158.8L109.03 146.99L107.18 131.94L104.4 121.76L100.69 113.66L96.3 107.64L89.58 102.08L81.71 99.07ZM135.88 121.53L125.69 124.54L118.52 131.71L113.89 144.68L112.96 158.33L162.5 158.8L162.73 150.69L161.11 140.74L156.25 130.09L152.31 125.93L147.92 123.38Z"/>',
+    quilt: '<rect x="41.8" y="41.8" width="117.6" height="117.6" fill="none" stroke="#fff" stroke-width="2.1" stroke-dasharray="5.2 6"/><rect x="50.8" y="50.4" width="45.8" height="45.8" fill="#fff"/><rect x="104.6" y="50.4" width="45.8" height="45.8" fill="#fff" opacity=".6"/><rect x="50.8" y="104.2" width="45.8" height="45.8" fill="#fff" opacity=".6"/><rect x="104.6" y="104.2" width="45.8" height="45.8" fill="#fff"/>'
+  };
+
+  /* a tile in SVG space: the 200-unit icon frame maps to the whole 216 tile */
+  function tile(x, y, fill, icon) {
+    return '<rect x="' + x + '" y="' + y + '" width="216" height="216" rx="8.5" fill="' + fill + '"/>' +
+           '<g transform="translate(' + x + ',' + y + ') scale(1.08)">' + ICON[icon] + '</g>';
+  }
+  /* the same tile as an HTML element, so a row of them can be justified by CSS */
+  function tileEl(fill, icon, lift) {
+    return '<span class="t" style="background:' + fill +
+      (lift ? ';margin-bottom:' + lift + 'px' : '') + '">' +
+      '<svg viewBox="0 0 200 200" aria-hidden="true">' + ICON[icon] + '</svg></span>';
+  }
+
+  /* ---- 13: the bullhorn carrying the three programs as the sound it makes */
+  function voicesInner() {
+    return ICON.bullhorn.replace('fill="#fff"', 'fill="' + C.terracotta + '"') +
+      '<g fill="none" stroke-width="8" stroke-linecap="round">' +
+        '<path stroke="' + C.sage + '" d="M172 78C180 88 180 112 172 122"/>' +
+        '<path stroke="' + C.gold + '" d="M190 64C203 82 203 118 190 136"/>' +
+        '<path stroke="' + C.blue + '" d="M208 50C226 76 226 124 208 150"/>' +
+      '</g>';
+  }
+  function voices() { return '<svg viewBox="34 40 200 124" role="img">' + voicesInner() + '</svg>'; }
+  /* rotated 45 degrees anticlockwise about the artwork's own centre, so the
+     bell and the three arcs aim up and to the right */
+  function voicesUp() {
+    return '<svg class="tall" viewBox="15 -17 239 239" role="img">' +
+      '<g transform="rotate(-45 134 102)">' + voicesInner() + '</g></svg>';
+  }
+
+  /* ---- 06: the bullhorn with no container, in the ground's own ink colour */
+  function bare() {
+    return '<svg viewBox="38 46 126 108" role="img">' +
+      ICON.bullhorn.replace('fill="#fff"', 'fill="currentColor"') + '</svg>';
+  }
+
+  /* ---- the mark as it is drawn today: four tiles in a block */
+  function gridSvg(c) {
+    c = c || FOUR;
+    return '<svg viewBox="0 0 453 453" role="img">' +
+      tile(0, 0, c[0], 'bullhorn') + tile(237, 0, c[1], 'brush') +
+      tile(0, 237, c[2], 'people') + tile(237, 237, c[3], 'quilt') + '</svg>';
+  }
+
+  /* ---- 11 / 14: the four tiles, in a row and in a climb */
+  function rowSvg(c) {
+    c = c || FOUR;
+    return '<svg viewBox="0 0 927 216" role="img">' +
+      tile(0, 0, c[0], 'bullhorn') + tile(237, 0, c[1], 'brush') +
+      tile(474, 0, c[2], 'people') + tile(711, 0, c[3], 'quilt') + '</svg>';
+  }
+  function stepsSvg(c) {
+    c = c || FOUR;
+    return '<svg viewBox="0 0 927 480" role="img">' +
+      tile(0, 264, c[0], 'bullhorn') + tile(237, 176, c[1], 'brush') +
+      tile(474, 88, c[2], 'people') + tile(711, 0, c[3], 'quilt') + '</svg>';
+  }
+
+  /* ---- 15: the sound with no instrument making it. Drawn as three rays
+     that widen as they travel, not as concentric arcs — arcs around a dot
+     are the wi-fi glyph, and nothing rescues a mark that reads as wi-fi. */
+  function rays() {
+    var O = [26, 178], cols = [C.sage, C.gold, C.blue], ang = [-66, -42, -18];
+    var r0 = 34, r1 = 162, w0 = 5, w1 = 16;
+    var body = ang.map(function (a, i) {
+      var t = a * Math.PI / 180, dx = Math.cos(t), dy = Math.sin(t);
+      var px = -dy, py = dx;
+      function pt(r, w, s) {
+        return (O[0] + dx * r + px * w * s).toFixed(1) + ' ' + (O[1] + dy * r + py * w * s).toFixed(1);
+      }
+      return '<path fill="' + cols[i] + '" stroke="' + cols[i] + '" stroke-width="6" ' +
+        'stroke-linejoin="round" d="M' + pt(r0, w0, 1) + 'L' + pt(r1, w1, 1) +
+        'L' + pt(r1, w1, -1) + 'L' + pt(r0, w0, -1) + 'Z"/>';
+    }).join('');
+    return '<svg viewBox="6 16 184 182" role="img">' + body +
+      '<circle cx="26" cy="178" r="16" fill="' + C.terracotta + '"/></svg>';
+  }
+
+  /* ---- 16: the monogram, set in the wordmark's own face */
+  function mono() {
+    return '<svg viewBox="0 0 216 216" role="img">' +
+      '<rect width="216" height="216" rx="8.5" fill="' + C.terracotta + '"/>' +
+      '<text x="108" y="108" dy=".345em" text-anchor="middle" fill="#fff" ' +
+      'font-family="Newsreader, Georgia, serif" font-weight="400" font-size="126">CJ</text></svg>';
+  }
+
+  /* ---- 17: four people, shoulder to shoulder, one per program colour */
+  function figure(cx, fill) {
+    return '<g fill="' + fill + '" stroke="var(--ground)" stroke-width="8" stroke-linejoin="round">' +
+      '<circle cx="' + cx + '" cy="52" r="26"/>' +
+      '<path d="M' + (cx - 44) + ' 160C' + (cx - 44) + ' 112 ' + (cx - 26) + ' 90 ' + cx + ' 90C' +
+        (cx + 26) + ' 90 ' + (cx + 44) + ' 112 ' + (cx + 44) + ' 160Z"/></g>';
+  }
+  function crowd() {
+    return '<svg viewBox="8 18 324 152" role="img">' +
+      figure(58, C.terracotta) + figure(134, C.sage) +
+      figure(210, C.gold) + figure(286, C.blue) + '</svg>';
+  }
+
+  /* ---- 18: no symbol at all, just the four colours as a rule */
+  function ruleSvg(c) {
+    c = c || FOUR;
+    return '<svg viewBox="0 0 216 216" role="img">' +
+      '<rect width="216" height="216" rx="8.5" fill="' + C.navy + '"/>' +
+      c.map(function (f, i) {
+        return '<rect x="34" y="' + (54 + i * 30) + '" width="148" height="14" rx="2" fill="' + f + '"/>';
+      }).join('') + '</svg>';
+  }
+
+  /* the square mark a horizontal lockup falls back to for avatars */
+  function squareFallback() {
+    return '<svg viewBox="0 0 216 216" role="img">' + tile(0, 0, C.terracotta, 'bullhorn') + '</svg>';
+  }
+
+  /* --------------------------------------------------------------- lockup
+     mode 'beside'  — mark to the left of the wordmark (square-ish marks)
+     mode 'above'   — a justified row of tiles over the wordmark
+     mode 'under'   — a justified rule beneath the tagline                 */
+  function lockup(mode, content) {
+    var text =
+      '<span class="name">Cleve Jones Foundation</span>' +
+      '<span class="tagline">Advocacy &amp; Art for Social Change</span>';
+    if (mode === 'above') {
+      return '<div class="lockup col"><span class="text">' + content + text + '</span></div>';
+    }
+    if (mode === 'under') {
+      return '<div class="lockup col"><span class="text">' + text + content + '</span></div>';
+    }
+    return '<div class="lockup">' + content + '<span class="text">' + text + '</span></div>';
+  }
+  function tileRow(c, lifts) {
+    c = c || FOUR;
+    return '<span class="tilerow">' + NAMES.map(function (n, i) {
+      return tileEl(c[i], n, lifts ? lifts[i] : 0);
+    }).join('') + '</span>';
+  }
+  function ruleRow(c) {
+    c = c || FOUR;
+    return '<span class="rulerow">' + c.map(function (f) {
+      return '<span style="background:' + f + '"></span>';
+    }).join('') + '</span>';
+  }
+
+  /* ------------------------------------------------------------- the sets */
+  var FIFTH = [
+    ['Lavender', '#8B7BAE',
+     'The one already on the table. It sits at the same muted strength as the sage and reads as unmistakably of this movement &mdash; which cuts both ways. Lavender carries the Lavender Scare and the Lavender Menace with it, so it is never a neutral choice. It is also the palest of the four and the lightest of the five it would join, so it is the first to go soft against ivory when the mark is small.'],
+    ['Plum', '#6E3D5E',
+     'Lavender with the lights turned down. Deep enough to hold a knocked-out white icon, which lavender is not, and close enough to the navy in value that the mark stays balanced. If the foundation wants purple in the palette, this is the one that behaves.'],
+    ['Teal', '#2E7D77',
+     'Sits in the gap between the sage and the blue and makes both look more deliberate. The coolest counterweight to the terracotta, and the only candidate that reads as civic rather than as a statement. The risk is that it is <em>too</em> close to the sage at a glance.'],
+    ['Ochre', '#CC7A2E',
+     'Warm orange between the terracotta and the gold. It is the most street-poster of the four and the easiest to print badly. It also crowds the two warm colours already in the palette, which is why I would add it only if the gold came out.']
+  ];
+
+  var SETS = [
+    {
+      eyebrow: 'Where we are',
+      title: 'The mark as it stands',
+      note: 'Unchanged, and still the front runner. It is at the top so that everything below has something to be measured against rather than being judged on its own.',
+      items: [
+        ['In use now', 'Four squares, beside the name',
+         'The mark on the site today: all four programs, all four colours, locked beside the wordmark at header size. The only argument against it is narrow and specific — four squares in a block with a stitched patch inside reads as <em>a quilt organisation’s logo</em>, and the Quilt is cared for by the National AIDS Memorial. If a donor confuses the two, the foundation loses the credit for its own work. Everything below is an answer to that one sentence.',
+         lockup('beside', gridSvg()), gridSvg(), null]
+      ]
+    },
+    {
+      eyebrow: 'Set A',
+      title: 'The three you kept, drawn properly',
+      note: 'Each one in the full lockup now, at header size. 13 is here twice: as it was, and tipped up to the right the way you asked.',
+      items: [
+        ['13↗', 'The bullhorn, raised',
+         'Rotated forty&#8209;five degrees anticlockwise, so the bell and the three arcs aim up and to the right. It is the same gesture as a raised arm, and it makes the mark square instead of nearly two tiles wide — which means one drawing serves the header, the favicon and a profile picture.',
+         lockup('beside', voicesUp()), voicesUp(), null],
+        ['13', 'The bullhorn, flat',
+         'The original, for comparison. Pointing straight out it reads as an announcement rather than a rally, and at nearly 2:1 it takes more width beside the wordmark than the wordmark can comfortably give it.',
+         lockup('beside', voices()), voices(), null],
+        ['11', 'The row, justified',
+         'Spaced exactly as you asked: the bullhorn tile’s left edge sits under the C of Cleve, the blue tile’s right edge under the final n of Foundation, and the two in between are spread evenly across. The spacing is not a number I chose — it is set by the width of the wordmark, so it stays right at every size.',
+         lockup('above', tileRow()), rowSvg(), squareFallback()],
+        ['06', 'The bullhorn, no frame',
+         'The survivor of set 2, kept only because you named it among the three. Cheapest to reproduce, impossible to crop badly, and it sits on a photograph without dragging a box along with it. Say the word and it goes with the rest of that set.',
+         lockup('beside', bare()), bare(), null]
+      ]
+    },
+    {
+      eyebrow: 'Set B',
+      title: 'Five directions we had not tried',
+      note: 'Not variations on the bullhorn this time. Each of these is a different kind of answer: the system rearranged, the sound without the instrument, the typographic route, the human one, and no symbol at all.',
+      items: [
+        ['14', 'The steps',
+         'The same four tiles, the same four colours, the same justification to the wordmark — with one idea added: they climb. It says progress and it says each program lifts the next, which the flat row does not. Same square&#8209;mark problem as the row.',
+         lockup('above', tileRow(null, [0, 16, 32, 48])), stepsSvg(), squareFallback()],
+        ['15', 'The sound, without the horn',
+         'Three rays leaving a point on the same diagonal as 13↗, in the three program colours, with the terracotta as the source. The most abstract option here and the one that scales best — still legible at sixteen pixels. Drawn as arcs rather than rays it was a wi‑fi glyph, which is the trap this direction sets. The remaining cost is that it has to be taught: nothing about it says bullhorn until someone says so.',
+         lockup('beside', rays()), rays(), null],
+        ['16', 'The monogram',
+         'C and J set in Newsreader, the wordmark’s own face, in the terracotta tile. No picture to misread and nothing borrowed from anyone. It is also the least expressive mark on the sheet, and it leans on a personal name in a way a foundation outliving its founder may not want.',
+         lockup('beside', mono()), mono(), null],
+        ['17', 'The crowd',
+         'Four figures shoulder to shoulder, one per program colour, drawn from the organising icon already in the set. It is the only mark here that puts people in the logo, which is what the foundation actually does. At small sizes the four run together into one shape — look at the square version before deciding.',
+         lockup('beside', crowd()), crowd(), null],
+        ['18', 'No symbol, a rule',
+         'The four colours as a justified rule under the tagline and nothing else. The most grown&#8209;up option on the sheet and by far the cheapest to live with: nothing to redraw, nothing to misread, nothing to confuse with another organisation. It gives up having a symbol at all, which is a real loss on a tote bag.',
+         lockup('under', ruleRow()), ruleSvg(), null]
+      ]
+    }
+  ];
+
+  var GROUNDS = [
+    ['Ivory', '#F7F3EC', '#E4DED3', '#C2553A', '#1B2350', '#7C7363'],
+    ['White', '#FFFFFF', '#E4DED3', '#C2553A', '#1B2350', '#7C7363'],
+    ['Navy',  '#1B2350', '#2E3763', '#FFFFFF', '#F6F1E8', '#C9A227']
+  ];
+
+  /* ------------------------------------------------------------- render */
+  function frame(it) {
+    var chip = it[5] || it[4];
+    var chipNote = it[5] ? 'the square it falls back to' : 'at favicon size';
+    return '<article class="frame">' +
+      '<div class="stage">' + it[3] + '</div>' +
+      '<div class="caption">' +
+        '<span class="no">' + it[0] + '</span>' +
+        '<h3>' + it[1] + '</h3>' +
+        '<p>' + it[2] + '</p>' +
+        '<span class="tag"><span class="mini">' + chip + '</span>' + chipNote + '</span>' +
+      '</div></article>';
+  }
+
+  var html = SETS.map(function (set) {
+    return '<section class="set"><div class="wrap">' +
+      '<div class="set-head">' +
+        '<p class="eyebrow">' + set.eyebrow + '</p>' +
+        '<h2>' + set.title + '</h2>' +
+        '<p>' + set.note + '</p>' +
+      '</div><div class="frames">' + set.items.map(frame).join('') + '</div>' +
+      '</div></section>';
+  }).join('');
+
+  /* the colour question, asked on the row so the new colour has to live
+     beside the other three rather than on its own */
+  html += '<section class="set"><div class="wrap">' +
+    '<div class="set-head">' +
+      '<p class="eyebrow">Set C</p>' +
+      '<h2>Is there a fifth colour?</h2>' +
+      '<p>The five colours you have are a family for one reason: not one of them is at full strength. The terracotta is a dulled red, the sage a dulled green, the gold a dulled yellow. A sixth colour joins the family if it is dialled down the same amount and sticks out if it is not &mdash; the hue matters much less than that.</p>' +
+      '<p>Each candidate is shown on the current mark, taking the gold tile’s place, because standing a colour next to the other three in the arrangement you already use is the only real test. None of these is needed to answer Kevin: the resemblance is a problem of shape, not colour.</p>' +
+    '</div><div class="frames">' +
+    FIFTH.map(function (f, i) {
+      var c = [C.terracotta, C.sage, f[1], C.blue];
+      return '<article class="frame">' +
+        '<div class="stage">' + lockup('beside', gridSvg(c)) + '</div>' +
+        '<div class="caption">' +
+          '<span class="no">' + String.fromCharCode(67) + (i + 1) + ' &middot; <span class="hex">' + f[1] + '</span></span>' +
+          '<h3>' + f[0] + '</h3>' +
+          '<p>' + f[2] + '</p>' +
+          '<span class="palette">' +
+            '<span style="background:' + C.terracotta + '"></span>' +
+            '<span style="background:' + C.sage + '"></span>' +
+            '<span style="background:' + C.gold + '"></span>' +
+            '<span style="background:' + C.blue + '"></span>' +
+            '<span style="background:' + C.navy + '"></span>' +
+            '<span class="new" style="background:' + f[1] + '"></span>' +
+          '</span>' +
+        '</div></article>';
+    }).join('') + '</div></div></section>';
+
+  document.getElementById('sheet').innerHTML = html;
+
+  /* marks are not all square, so give each one its own width from its viewBox */
+  [].forEach.call(document.querySelectorAll('.lockup > svg'), function (s) {
+    var vb = s.getAttribute('viewBox').split(/[\s,]+/);
+    var h = parseFloat(getComputedStyle(s).height) || 73;
+    s.style.width = (h * (parseFloat(vb[2]) / parseFloat(vb[3]))).toFixed(1) + 'px';
+  });
+
+  /* ---------------------------------------------------------- the ground */
+  var strip = document.getElementById('grounds');
+  strip.innerHTML = GROUNDS.map(function (g, i) {
+    return '<button type="button" aria-pressed="false" data-i="' + i + '">' +
+      '<span class="chip" style="background:' + g[1] + '"></span>' + g[0] + '</button>';
+  }).join('');
+
+  function setGround(i) {
+    var g = GROUNDS[i], r = document.documentElement.style;
+    r.setProperty('--ground', g[1]);
+    r.setProperty('--ground-rule', g[2]);
+    r.setProperty('--mark-ink', g[3]);
+    r.setProperty('--lock-name', g[4]);
+    r.setProperty('--lock-tag', g[5]);
+    [].forEach.call(strip.children, function (b, j) { b.setAttribute('aria-pressed', String(i === j)); });
+    try { localStorage.setItem('cjf-ground-2', String(i)); } catch (e) { /* private window */ }
+  }
+  strip.addEventListener('click', function (e) {
+    var b = e.target.closest('button');
+    if (b) setGround(+b.dataset.i);
+  });
+
+  var saved = 0;
+  try {
+    var v = parseInt(localStorage.getItem('cjf-ground-2'), 10);
+    if (v >= 0 && v < GROUNDS.length) saved = v;
+  } catch (e) { saved = 0; }
+  setGround(saved);
+}());
+</script>

@@ -1,0 +1,30 @@
+# Cleve Jones Foundation — Netlify configuration
+#
+# The site is plain HTML. There is no build step: Netlify copies the `site`
+# folder to the CDN exactly as it is. The generator in `_work/` runs on a
+# developer's machine, not here, so `command` is deliberately empty.
+
+[build]
+  publish = "site"
+
+# ---------------------------------------------------------------- headers
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options        = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy        = "strict-origin-when-cross-origin"
+    Permissions-Policy     = "geolocation=(), microphone=(), camera=()"
+
+    # ====================================================================
+    # KEEPS THE SITE OUT OF GOOGLE UNTIL LAUNCH DAY.
+    # The donation form does not take money yet and the photo rights are
+    # not cleared, so nothing here should be indexed. DELETE THE NEXT LINE
+    # when the site goes live for real — that is the whole launch switch.
+    # ====================================================================
+    X-Robots-Tag = "noindex, nofollow"
+
+# Caching is left at Netlify's default (revalidate against an ETag).
+# Do not add a long max-age here: the filenames are not content-hashed, so
+# a year-long cache would mean a replaced photograph never reaches anyone
+# who had already seen the old one.

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 216 216" width="216" height="216" role="img" aria-label="Cleve Jones Foundation">
+<title>Cleve Jones Foundation</title>
+<!-- The favicon is one brand icon, not the four-square mark: at 16px the 2x2
+     composite is four unreadable smudges. The bullhorn is the lead icon of the
+     set — advocacy, and the icon already carried by every Give button. -->
+<rect x="0" y="0" width="216" height="216" rx="8.5" fill="#D2462E"/>
+<g transform="scale(1.08)"><path fill="#FFFFFF" d="M159.49 49.07L96.99 77.55L56.94 77.55L56.25 73.38L40.05 73.38L40.05 122.69L56.02 122.92L56.71 118.75L72.45 118.75L81.71 151.62L97.22 151.39L90.05 118.75L97.92 118.75L160.88 146.99L161.11 49.54Z"/></g>
+</svg>
