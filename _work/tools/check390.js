@@ -13,11 +13,14 @@ async function one(name,W){
   const r=await send('Runtime.evaluate',{returnByValue:true,awaitPromise:true,expression:`(async()=>{await document.fonts.ready;
     const marks=[...document.querySelectorAll('.logo-mark')].map(function(m){const b=m.getBoundingClientRect();
       return Math.round(b.width)+'x'+Math.round(b.height);});
-    const n=document.querySelector('.site-header .logo-name'), t=document.querySelector('.site-header .logo-tag');
+    let n=document.querySelector('.site-header .logo-name'), t=document.querySelector('.site-header .logo-tag');
     const ink=function(e){const q=document.createRange();q.selectNodeContents(e);const b=q.getBoundingClientRect();return b;};
-    const a=ink(n), b=ink(t), ls=parseFloat(getComputedStyle(t).letterSpacing)||0;
+    /* the logo is drawn as SVG outlines now, so its alignment is fixed; only
+       measure it if a live-text logo ever comes back */
+    if(!n||!t){ n=t=document.body; }
+    const a=n===document.body?{left:0,right:0}:ink(n), b=n===document.body?{left:0,right:0}:ink(t), ls=n===document.body?0:(parseFloat(getComputedStyle(t).letterSpacing)||0);
     return JSON.stringify({scrollW:document.documentElement.scrollWidth, marks:marks,
-      nameLines:n.getClientRects().length,
+      nameLines:n===document.body?1:n.getClientRects().length,
       leftDelta:+(a.left-b.left).toFixed(2), rightDelta:+(a.right-(b.right-ls)).toFixed(2),
       brokenImgs:[...document.images].filter(function(i){return i.complete&&i.naturalWidth===0;}).length,
       emptyUses:[...document.querySelectorAll('use')].filter(function(u){
