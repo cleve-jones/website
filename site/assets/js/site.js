@@ -116,6 +116,11 @@
         squares[q].classList.toggle('is-lit', s.square === null || s.square === q);
       }
 
+      /* the verb and the tag take the colour of the program the photograph
+         belongs to — the same colour as its lit square (red, green, plum,
+         blue); the opening "act." slide, with every square lit, stays red */
+      hero.setAttribute('data-theme', ['red', 'green', 'plum', 'blue'][s.square === null ? 0 : s.square]);
+
       verbEl.textContent = s.verb;
       tagEl.textContent = s.tag;
       capEl.textContent = s.caption;
