@@ -225,7 +225,11 @@ p:last-child{ margin-bottom:0; }
 
 .hero-inner{ position:relative; padding-block:clamp(56px,9vw,90px); }
 .hero-title{ max-width:11ch; margin-bottom:.38em; text-shadow:0 2px 24px rgba(10,14,36,.4); }
-.hero-verb{ color:var(--red); display:inline-block; }
+.hero{ --theme:var(--red); }
+.hero[data-theme="green"]{ --theme:var(--green); }
+.hero[data-theme="plum"]{ --theme:var(--plum); }
+.hero[data-theme="blue"]{ --theme:var(--blue); }
+.hero-verb{ color:var(--theme); display:inline-block; transition:color .5s ease; }
 .hero-verb.is-swapping{ animation:verbIn .5s ease; }
 @keyframes verbIn{ from{ opacity:0; transform:translateY(.22em); } to{ opacity:1; transform:none; } }
 .hero-lede{ max-width:34rem; font-size:clamp(1.02rem,1.5vw,1.22rem); color:rgba(255,255,255,.93); margin-bottom:1.7em; }
@@ -237,7 +241,7 @@ p:last-child{ margin-bottom:0; }
   margin:0; max-width:40rem; min-height:2.2em;
 }
 .hero-tag{
-  background:var(--red); color:#fff; font-weight:700;
+  background:var(--theme); color:#fff; font-weight:700; transition:background-color .5s ease;
   letter-spacing:.13em; text-transform:uppercase; font-size:var(--min-type);
   padding:.42em .75em; flex:none;
 }
