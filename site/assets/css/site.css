@@ -19,14 +19,14 @@
   --plum-dark:#663060;
   --navy-deep:#141A3C;
 
-  /* On navy and over photographs, every brand colour except ivory is too
-     dark to carry small type, a hairline or a button that has to read as a
-     shape against the background. --red-light is a tint of brand red kept
-     for exactly that job: 6.1:1 against navy, and navy on it is 6.1:1 the
-     other way, so it works for accent type, rules and the light CTA on
-     dark. It is the only colour here that is not on the logo sheet. */
-  --red-light:#E88D7D;
-  --red-light-dark:#D97762;
+  /* On navy, only the six colours on the logo sheet are used:
+     - small type (eyebrows, footer headings, link lists) is ivory, 13.5:1;
+       none of the four brand colours is readable that small on navy;
+     - headline accents are brand red: 3.3:1 against navy, which passes for
+       large type (WCAG asks 3:1 at 24px and up) but NOT for body-size text,
+       so never use red for small type on navy;
+     - buttons on navy are brand red with white type (4.5:1), and rules,
+       underlines and markers are brand red (non-text needs 3:1). */
 
   --rule:#E2DCD1;
   --ink-soft:#4A5272;
@@ -79,7 +79,7 @@ p{ margin:0 0 1.1em; }
 p:last-child{ margin-bottom:0; }
 
 .accent{ color:var(--red); }
-.accent-on-dark{ color:var(--red-light); }
+.accent-on-dark{ color:var(--red); }   /* headline-size only — see the note at the top */
 
 .sr-only{
   position:absolute!important; width:1px; height:1px; padding:0; margin:-1px;
@@ -104,7 +104,8 @@ p:last-child{ margin-bottom:0; }
   color:var(--red); margin:0 0 1.15em;
 }
 .eyebrow::before{ content:""; width:11px; height:11px; background:currentColor; flex:none; }
-.eyebrow-on-dark{ color:var(--red-light); }
+.eyebrow-on-dark{ color:var(--ivory); }
+.eyebrow-on-dark::before{ background:var(--red); }
 .eyebrow-navy{ color:var(--navy); }
 .eyebrow-white{ color:#fff; }
 
@@ -124,8 +125,8 @@ p:last-child{ margin-bottom:0; }
 /* the light CTA. Every one of these sits on navy — in the sign-up band, in a
    support box or in a navy section — so it takes the light tint and navy
    type, which is the job the old gold button did. */
-.btn-accent{ background:var(--red-light); color:var(--navy); }
-.btn-accent:hover{ background:var(--red-light-dark); }
+.btn-accent{ background:var(--red); color:#fff; }
+.btn-accent:hover{ background:var(--red-dark); }
 .btn-navy{ background:var(--navy); color:#fff; }
 .btn-navy:hover{ background:var(--navy-deep); }
 .btn-outline{ border-color:var(--navy); color:var(--navy); background:transparent; }
@@ -144,8 +145,8 @@ p:last-child{ margin-bottom:0; }
   display:inline-block;
 }
 .tlink:hover{ color:var(--red-dark); border-color:var(--red-dark); }
-.tlink-on-dark{ color:#fff; border-color:var(--red-light); }
-.tlink-on-dark:hover{ color:var(--red-light); }
+.tlink-on-dark{ color:#fff; border-color:var(--red); }
+.tlink-on-dark:hover{ color:var(--ivory); border-color:#fff; }
 
 /* ----------------------------------------------------------------- header */
 .site-header{ position:sticky; top:0; z-index:100; background:#fff; border-bottom:1px solid var(--rule); }
@@ -224,7 +225,7 @@ p:last-child{ margin-bottom:0; }
 
 .hero-inner{ position:relative; padding-block:clamp(56px,9vw,90px); }
 .hero-title{ max-width:11ch; margin-bottom:.38em; text-shadow:0 2px 24px rgba(10,14,36,.4); }
-.hero-verb{ color:var(--red-light); display:inline-block; }
+.hero-verb{ color:var(--red); display:inline-block; }
 .hero-verb.is-swapping{ animation:verbIn .5s ease; }
 @keyframes verbIn{ from{ opacity:0; transform:translateY(.22em); } to{ opacity:1; transform:none; } }
 .hero-lede{ max-width:34rem; font-size:clamp(1.02rem,1.5vw,1.22rem); color:rgba(255,255,255,.93); margin-bottom:1.7em; }
@@ -269,7 +270,7 @@ p:last-child{ margin-bottom:0; }
   padding-inline:var(--gutter); max-width:var(--wrap); width:100%;
 }
 .hero-dots button{ width:40px; height:4px; border:0; padding:0; cursor:pointer; background:rgba(255,255,255,.3); }
-.hero-dots button[aria-current="true"]{ background:var(--red-light); }
+.hero-dots button[aria-current="true"]{ background:var(--red); }
 
 @media (max-width:860px){
   .hero-scrim{ background:linear-gradient(to top,rgba(20,26,60,.95) 12%,rgba(20,26,60,.74) 58%,rgba(20,26,60,.62) 100%); }
@@ -311,7 +312,7 @@ p:last-child{ margin-bottom:0; }
 
 /* ------------------------------------------------------------- give columns */
 .give-grid{ display:grid; gap:26px 30px; grid-template-columns:repeat(auto-fit,minmax(min(180px,100%),1fr)); }
-.give-col{ border-top:3px solid var(--red-light); padding-top:14px; }
+.give-col{ border-top:3px solid var(--red); padding-top:14px; }
 .give-col h4{ font-family:var(--ui); font-weight:700; font-size:.95rem; margin:0 0 .5em; }
 .give-col p{ margin:0; font-size:.9rem; color:rgba(255,255,255,.8); }
 
@@ -357,10 +358,10 @@ p:last-child{ margin-bottom:0; }
 .ct-blue{ border-top-color:var(--blue); }
 .ct-green{ border-top-color:var(--green); }
 .card-outline{ border:1px solid var(--rule); border-top-width:4px; }
-.card-navy{ background:var(--navy); color:#fff; border-top-color:var(--red-light); }
+.card-navy{ background:var(--navy); color:#fff; border-top-color:var(--red); }
 .card-navy h3{ color:#fff; }
 .card-navy p{ color:rgba(255,255,255,.82); }
-.card-navy .tlink{ color:#fff; border-color:var(--red-light); }
+.card-navy .tlink{ color:#fff; border-color:var(--red); }
 
 .quote{ font-family:var(--serif); font-style:italic; font-size:1.02rem; border-left:3px solid var(--red); padding-left:16px; margin:18px 0 0; }
 .quote cite{
@@ -397,7 +398,7 @@ p:last-child{ margin-bottom:0; }
 .site-footer{ background:var(--navy); color:rgba(255,255,255,.82); padding-block:clamp(44px,5vw,64px) 28px; font-size:.92rem; }
 .footer-grid{ display:grid; gap:34px; grid-template-columns:1fr; }
 @media (min-width:1080px){ .footer-grid{ grid-template-columns:2.05fr 1fr 1fr 1.25fr; } }
-.footer-grid h3{ font-family:var(--ui); font-weight:700; font-size:var(--min-type); letter-spacing:.15em; text-transform:uppercase; color:var(--red-light); margin:0 0 1em; }
+.footer-grid h3{ font-family:var(--ui); font-weight:700; font-size:var(--min-type); letter-spacing:.15em; text-transform:uppercase; color:var(--ivory); margin:0 0 1em; }
 .footer-grid ul{ list-style:none; margin:0; padding:0; display:grid; gap:.6em; }
 .footer-grid a{ color:rgba(255,255,255,.84); text-decoration:none; font-family:var(--ui); font-size:.88rem; }
 .footer-grid a:hover{ color:#fff; text-decoration:underline; }
@@ -475,7 +476,7 @@ p:last-child{ margin-bottom:0; }
 .work-block h2{ max-width:14ch; }
 .work-links{ font-family:var(--ui); font-size:.84rem; margin-top:18px; display:grid; gap:.45em; }
 .work-links a{ color:var(--red); font-weight:600; }
-.section-navy .work-links a{ color:var(--red-light); }
+.section-navy .work-links a{ color:var(--ivory); text-decoration-color:var(--red); text-underline-offset:.2em; }
 .section-navy .work-links{ color:rgba(255,255,255,.88); }
 
 /* -------------------------------------------------------------- founders */
