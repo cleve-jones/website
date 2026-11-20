@@ -601,6 +601,17 @@ p:last-child{ margin-bottom:0; }
 .trio .tile svg,
 .card-tile svg{ width:100%; height:100%; fill:currentColor; display:block; }
 
+/* Rounded corners, as the "Website icons" row of the logo sheet draws them:
+   about 8 units of radius on the 200-unit tile, so 4% — a percentage keeps
+   the same proportion at every tile size. */
+.hero-squares .sq,
+.band-mark,
+.work-tile,
+.mini-col .tile,
+.support-box .mark,
+.trio .tile,
+.card-tile{ border-radius:4%; }
+
 /* a tile above a card heading, so rows of cards are told apart at a glance */
 .card-tile{
   width:54px; height:54px; display:grid; place-items:center;
