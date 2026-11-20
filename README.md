@@ -8,7 +8,7 @@ no dependencies — `site/index.html` opens in a browser and runs.
 
 > **This repository is public.** Everything in it can be read by anyone. Internal
 > notes, contact details and anything not cleared for publication belong in the
-> private `clevejonesfoundation/foundation-docs` repository instead.
+> private `cleve-jones/foundation-docs` repository instead.
 
 ---
 
@@ -88,7 +88,7 @@ The site is still reachable by anyone with the link — this stops search engine
 indexing it, nothing more. When both of those are genuinely resolved, delete
 that one line from `netlify.toml`. That is the launch.
 
-See `LAUNCH-CHECKLIST.md` in the private `clevejonesfoundation/foundation-docs`
+See `LAUNCH-CHECKLIST.md` in the private `cleve-jones/foundation-docs`
 repository for everything else still outstanding.
 
 ---

@@ -9,7 +9,7 @@ Thumbs.db
 *.bak
 
 # Internal notes, working files and superseded concepts. This repository is
-# PUBLIC; these live in the private repo clevejonesfoundation/foundation-docs.
+# PUBLIC; these live in the private repo cleve-jones/foundation-docs.
 docs/
 Updates/
 concepts/
