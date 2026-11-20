@@ -241,13 +241,19 @@ p:last-child{ margin-bottom:0; }
   padding:.42em .75em; flex:none;
 }
 
+/* Each square is given its width AND its height. It used to set only the
+   width and rely on aspect-ratio for the height, and browsers without
+   aspect-ratio (Safari before 15, iPhones and iPads on iOS 14 or older, older
+   Chrome and Edge) then stretched every square to the icon's default 150px
+   height — tall rectangles instead of squares. */
 .hero-squares{
+  --sq:clamp(46px,6vw,74px);
   position:absolute; right:clamp(16px,4vw,56px); bottom:clamp(30px,4vw,56px);
-  display:grid; grid-template-columns:repeat(2,clamp(46px,6vw,74px));
+  display:grid; grid-template-columns:repeat(2,var(--sq));
   gap:4px; z-index:2;
 }
 .hero-squares .sq{
-  aspect-ratio:1; display:grid; place-items:center;
+  width:var(--sq); height:var(--sq); display:grid; place-items:center;
   opacity:.5; transition:opacity .5s ease,transform .5s ease; transform:scale(.97);
 }
 .hero-squares .sq.is-lit{ opacity:1; transform:scale(1); }
@@ -267,7 +273,7 @@ p:last-child{ margin-bottom:0; }
 
 @media (max-width:860px){
   .hero-scrim{ background:linear-gradient(to top,rgba(20,26,60,.95) 12%,rgba(20,26,60,.74) 58%,rgba(20,26,60,.62) 100%); }
-  .hero-squares{ grid-template-columns:repeat(4,44px); right:auto; left:var(--gutter); bottom:62px; }
+  .hero-squares{ --sq:44px; grid-template-columns:repeat(4,var(--sq)); right:auto; left:var(--gutter); bottom:62px; }
   .hero-title{ max-width:none; }
 }
 @media (prefers-reduced-motion:reduce){
@@ -457,6 +463,11 @@ p:last-child{ margin-bottom:0; }
    outline and shows up once the icon is drawn much past 200px. Until they are
    redrawn as true vector, nothing on the site asks them to be larger. */
 .work-tile{ aspect-ratio:1; display:grid; place-items:center; max-width:180px; width:100%; }
+/* the same square, for browsers without aspect-ratio (see .hero-squares) */
+@supports not (aspect-ratio:1){
+  .work-tile{ position:relative; height:0; padding-bottom:min(100%,180px); }
+  .work-tile svg{ position:absolute; inset:0; }
+}
 .work-tile{ color:#fff; }
 .wt-green{ background:var(--green); }
 .wt-plum{ background:var(--plum); }
@@ -596,68 +607,37 @@ p:last-child{ margin-bottom:0; }
 }
 
 /* ------------------------------------------------------------------- logo
-   The primary logo on the November 2026 logo sheet is a three-part stack:
-   the name in Lora, the tagline in Inter SemiBold letterspaced to the same
-   width, and the four brand colours as equal bars underneath. There is no
-   four-square mark in the lockup any more — that mark survives only as the
-   favicon, where a wordmark would be unreadable at 16px. All three parts are
-   live text or colour, so nothing here is an image to re-export. */
+   The primary logo from the November 2026 logo sheet ("CJF Logo 11-26"): the
+   name in Lora, the tagline in Inter SemiBold tracked out to the same width,
+   and the four brand colours as equal bars underneath. It is drawn as outlines
+   (the #logo-full and #logo-compact symbols in the page's sprite), not live
+   text, so it cannot shift when a computer is missing the fonts or a browser
+   measures text differently — the "n" of Foundation always sits over the "E"
+   of Change, as on the sheet.
+
+   Every logo svg gets an explicit width AND height. Leaving the height to the
+   browser is what made tiles render as tall rectangles in older Safari. */
 .logo{ display:flex; align-items:center; text-decoration:none; flex:none; }
+.logo svg{ display:block; }
+/* the sheet's tagline grey, and on navy the sheet's ivory name and 80% white tagline */
+.logo{ --logo-name:#1B2350; --logo-tag:#6B6660; }
+.site-header .logo-full{ width:340px; height:64.75px; }   /* 1381 x 263 */
+.site-header .logo-compact{ display:none; width:250px; height:31.7px; } /* 1381 x 175 */
 
-/* The grid column is as wide as the widest line — the tagline — and the
-   wordmark is justified to fill it, which puts "Cleve" directly above
-   "Advocacy" and the "n" of Foundation above the "E" of Change, as drawn on
-   the sheet. The extra width lands in the word spaces, so the letterforms
-   are never stretched. The bars then stretch across that same column. */
-.logo-text{ display:grid; gap:.3em; justify-items:stretch; }
-.logo-name{
-  font-family:var(--logo); font-weight:500; line-height:1;
-  /* sized so the wordmark very nearly fills the tagline's width on its own —
-     justification then adds only a hair to each word space. Lora sets wider
-     than the Newsreader this replaced, hence the smaller size. */
-  font-size:1.94rem;
-  color:var(--navy);
-  text-align:justify; text-align-last:justify;
-}
-.logo-tag{
-  font-family:var(--ui); font-weight:600; line-height:1;
-  font-size:var(--min-type);
-  letter-spacing:.17em; text-transform:uppercase;
-  color:var(--ink-soft); white-space:nowrap;
-  /* letter-spacing also adds a gap after the final E; pull it back so the
-     column measures the ink, not the trailing space. */
-  margin-inline-end:-.17em;
-}
-/* four equal bars, in the order they run on the logo sheet */
-.logo-bars{ display:grid; grid-template-columns:repeat(4,1fr); gap:6px; margin-top:.18em; }
-.logo-bars i{ display:block; height:5px; }
-.logo-bars i:nth-child(1){ background:var(--red); }
-.logo-bars i:nth-child(2){ background:var(--green); }
-.logo-bars i:nth-child(3){ background:var(--plum); }
-.logo-bars i:nth-child(4){ background:var(--blue); }
-
-/* Below the full-width header the lockup cannot hold a 10pt tagline on one
-   line, so the tagline steps out of the header rather than shrinking under the
-   floor; in the footer it wraps instead, where there is room for two lines.
-   The bars stay either way — with the tagline gone they are the only brand
-   colour left in the header. */
+/* Below the full-width header the tagline would be too small to read, so the
+   header switches to the name and bars alone; the footer keeps the full logo. */
 @media (max-width:1240px){
-  .site-header .logo-name{ font-size:1.5rem; text-align:left; text-align-last:left; }
-  .site-header .logo-tag{ display:none; }
-  .site-header .logo-bars{ height:4px; }
-  .site-header .logo-bars i{ height:4px; }
+  .site-header .logo-full{ display:none; }
+  .site-header .logo-compact{ display:block; }
 }
-.footer-logo{ display:grid; justify-items:start; gap:14px; margin-bottom:18px; }
-
-/* narrower than any phone we design for — the tagline wraps rather than
-   shrinking below the 10pt floor */
 @media (max-width:400px){
-  .footer-logo .logo-tag{ white-space:normal; line-height:1.45; }
-  .footer-logo .logo-name{ text-align:left; text-align-last:left; }
+  .site-header .logo-compact{ width:210px; height:26.6px; }
 }
-/* on navy the sheet sets both lines in white; the bars stay full strength */
-.footer-logo .logo-name{ color:#FFFFFF; }
-.footer-logo .logo-tag{ color:rgba(255,255,255,.88); }
+.footer-logo{ display:block; margin-bottom:18px; --logo-name:#F7F3EC; --logo-tag:rgba(255,255,255,.8); }
+.footer-logo .logo-full{ width:340px; height:64.75px; }
+@media (max-width:400px){
+  .footer-logo .logo-full{ width:280px; height:53.3px; }
+}
 
 /* ------------------------------------------------------- video embeds
    Click-to-play: nothing loads from YouTube until the visitor asks for it. */
